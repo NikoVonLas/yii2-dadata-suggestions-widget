@@ -3,9 +3,11 @@
 namespace corpsepk\DaData;
 
 use yii\helpers\Html;
-use yii\helpers\Json;
 use yii\widgets\InputWidget;
 use yii\base\InvalidConfigException;
+
+use Zend\Json\Json;
+use Zend\Json\Expr;
 
 /**
  * SuggestionsWidget widget is a Yii2 wrapper for the DaData Suggestions jQuery plugin.
@@ -70,6 +72,20 @@ class SuggestionsWidget extends InputWidget
     const ADDON_SPINNER = 'spinner';
     const ADDON_CLEAR = 'clear';
     const ADDON_NONE = 'none';
+
+    /**
+     * @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=466681917
+     */
+    public $beforeRender;
+    public $formatResult;
+    public $formatSelected;
+    public $onInvalidateSelection;
+    public $onSearchStart;
+    public $onSearchComplete;
+    public $onSearchError;
+    public $onSuggestionsFetch;
+    public $onSelect;
+    public $onSelectNothing;
 
     /**
      * Тип подсказок:
@@ -278,7 +294,7 @@ class SuggestionsWidget extends InputWidget
             'triggerSelectOnEnter',
             'triggerSelectOnSpace',
             'type',
-            'width',
+            'width'
         ];
         foreach ($attributes as $attribute) {
             if ($this->$attribute === null || isset($this->options[$attribute])) {
@@ -286,6 +302,26 @@ class SuggestionsWidget extends InputWidget
             }
 
             $this->options[$attribute] = $this->$attribute;
+        }
+
+        $callbacks = [
+            'beforeRender',
+            'formatResult',
+            'formatSelected',
+            'onInvalidateSelection',
+            'onSearchStart',
+            'onSearchComplete',
+            'onSearchError',
+            'onSuggestionsFetch',
+            'onSelect',
+            'onSelectNothing'
+        ];
+        foreach ($callbacks as $callback) {
+            if ($this->$callback === null || isset($this->options[$callback])) {
+                continue;
+            }
+
+            $this->options[$callback] = new Expr($this->$callback);
         }
 
         // `type` required
@@ -341,9 +377,8 @@ class SuggestionsWidget extends InputWidget
      */
     protected function registerPlugin()
     {
-        $id = $this->options['id'];
-        $options = empty($this->options) ? '' : Json::htmlEncode($this->options);
-        $js = "jQuery('#$id').suggestions($options);";
+        $options = empty($this->options) ? '' : Json::encode($this->options, false, ['enableJsonExprFinder' => true]);
+        $js = 'jQuery(\'#' . $this->options['id'] . '\').suggestions(' . $options . ');';
         $this->getView()->registerJs($js);
     }
 }
