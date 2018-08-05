@@ -1,5 +1,5 @@
 {
-  "name": "corpsepk/yii2-dadata-suggestions-widget",
+  "name": "nikovonlas/yii2-dadata-suggestions-widget",
   "type": "yii2-extension",
 
   "description": "DaData Suggestions jQuery widget wrapper",
