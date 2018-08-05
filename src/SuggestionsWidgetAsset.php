@@ -16,7 +16,7 @@ class SuggestionsWidgetAsset extends AssetBundle
         'yii\web\JqueryAsset',
     ];
 
-    public $js = ["https://cdn.jsdelivr.net/jquery.suggestions/16.10/js/jquery.suggestions.min.js"];
+    public $js = ['https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.1/jquery.xdomainrequest.min.js', 'https://cdn.jsdelivr.net/npm/suggestions-jquery@18.3.3/dist/js/jquery.suggestions.min.js'];
 
-    public $css = ["https://cdn.jsdelivr.net/jquery.suggestions/16.10/css/suggestions.css"];
+    public $css = ['https://cdn.jsdelivr.net/npm/suggestions-jquery@18.3.3/dist/css/suggestions.min.css'];
 }
